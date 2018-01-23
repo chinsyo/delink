@@ -15,25 +15,28 @@ def encode(s, t):
     if t is EncodeType.RAW:
         return s
     encoded = padding(s, t)
-    encoded = utf8encoded(encoded)
-    encoded = b64encode(encoded)
+    encoded = utf8function(b64encode, encoded)
     if t is EncodeType.THUNDER:
-        encoded = utf8encoded("thunder://") + encoded
+        encoded = "thunder://" + encoded
     if t is EncodeType.FLASHGET:
-        encoded = utf8encoded("flashget://") + encoded + utf8encoded("&forece")
+        encoded = "flashget://" + encoded
     if t is EncodeType.QQDOWNLOAD:
-        encoded = utf8encoded("qqdl://") + encoded
-    return utf8decoded(encoded)
+        encoded = "qqdl://" + encoded
+    return encoded
 
 def decode(s, t):
     if t is EncodeType.RAW:
         return s
     decoded = subscript(s)
-    decoded = utf8encoded(decoded)
-    decoded = b64decode(decoded)
-    decoded = utf8decoded(decoded)
+    decoded = utf8function(b64decode, decoded)
     decoded = trimming(decoded, t)
     return decoded
+
+def utf8function(fn, s):
+    assert type(s) is str
+    b = s.encode('utf-8')
+    b = fn(b)
+    return b.decode('utf-8')
 
 def transcode(s, t):
     raw_url = decode(s, t)
@@ -45,7 +48,7 @@ def transcode(s, t):
     print("迅雷: {}".format(thd_url))
     print("快车: {}".format(flg_url))
     print("旋风: {}".format(qqd_url))
-    print(" " * 60)
+    print("")
 
 def guesscode(s):
     if s.startswith('thunder://'):
@@ -55,12 +58,6 @@ def guesscode(s):
     if s.startswith('qqdl://'):
         return EncodeType.QQDOWNLOAD
     return EncodeType.RAW
-
-def utf8encoded(s):
-    return s.encode('utf-8')
-
-def utf8decoded(b):
-    return b.decode('utf-8')
 
 def padding(s, t):
     dest = s
@@ -79,7 +76,7 @@ def trimming(s, t):
     return dest
 
 def subscript(s):
-    return re.split(r"//|&", s)[1]
+    return re.split(r"//", s)[1]
 
 if __name__ == '__main__':
     args = sys.argv[1:]
