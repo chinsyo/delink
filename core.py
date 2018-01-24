@@ -11,11 +11,19 @@ class EncodeType(Enum):
     FLASHGET = 2
     QQDOWNLOAD = 3
 
+def transcode(s):
+    t = guesscode(s)
+    raw_url = decode(s, t)
+    thd_url = encode(raw_url, EncodeType.THUNDER)
+    flg_url = encode(raw_url, EncodeType.FLASHGET)
+    qqd_url = encode(raw_url, EncodeType.QQDOWNLOAD)
+    return (raw_url, thd_url, flg_url, qqd_url)
+
 def encode(s, t):
     if t is EncodeType.RAW:
         return s
-    encoded = padding(s, t)
-    encoded = utf8function(b64encode, encoded)
+    encoded = _padding(s, t)
+    encoded = _utf8function(b64encode, encoded)
     if t is EncodeType.THUNDER:
         encoded = "thunder://" + encoded
     if t is EncodeType.FLASHGET:
@@ -27,28 +35,10 @@ def encode(s, t):
 def decode(s, t):
     if t is EncodeType.RAW:
         return s
-    decoded = subscript(s)
-    decoded = utf8function(b64decode, decoded)
-    decoded = trimming(decoded, t)
+    decoded = _subscript(s)
+    decoded = _utf8function(b64decode, decoded)
+    decoded = _trimming(decoded, t)
     return decoded
-
-def utf8function(fn, s):
-    assert type(s) is str
-    b = s.encode('utf-8')
-    b = fn(b)
-    return b.decode('utf-8')
-
-def transcode(s, t):
-    raw_url = decode(s, t)
-    thd_url = encode(raw_url, EncodeType.THUNDER)
-    flg_url = encode(raw_url, EncodeType.FLASHGET)
-    qqd_url = encode(raw_url, EncodeType.QQDOWNLOAD)
-
-    print("原始: {}".format(raw_url))
-    print("迅雷: {}".format(thd_url))
-    print("快车: {}".format(flg_url))
-    print("旋风: {}".format(qqd_url))
-    print("")
 
 def guesscode(s):
     if s.startswith('thunder://'):
@@ -59,7 +49,16 @@ def guesscode(s):
         return EncodeType.QQDOWNLOAD
     return EncodeType.RAW
 
-def padding(s, t):
+def _subscript(s):
+    return re.split(r"//", s)[1]
+
+def _utf8function(fn, s):
+    assert type(s) is str
+    b = s.encode('utf-8')
+    b = fn(b)
+    return b.decode('utf-8')
+
+def _padding(s, t):
     dest = s
     if t is EncodeType.THUNDER:
         dest = "AA" + dest + "ZZ"
@@ -67,7 +66,7 @@ def padding(s, t):
         dest = "[FLASHGET]" + dest + "[FLASHGET]"
     return dest
 
-def trimming(s, t):
+def _trimming(s, t):
     dest = s
     if (dest[:2] == "AA") and (dest[-2:] == "ZZ"):
         dest = dest[2:-2]
@@ -75,11 +74,14 @@ def trimming(s, t):
         dest = dest[10:-10]
     return dest
 
-def subscript(s):
-    return re.split(r"//", s)[1]
-
 if __name__ == '__main__':
     args = sys.argv[1:]
     for arg in args:
-        code = guesscode(arg)
-        transcode(arg, code)
+        # code = guesscode(arg)
+        a, b, c, d = transcode(arg)
+
+        print("原始: {}".format(a))
+        print("迅雷: {}".format(b))
+        print("快车: {}".format(c))
+        print("旋风: {}".format(d))
+        print("")
