@@ -1,8 +1,8 @@
 # delink
 
 ```
-Decrypt thunder / flashget / qqdownload link.
-解密下载链接的真实路径。
+Decode thunder / flashget / qqdownload link.
+解码下载链接的真实路径。
 ```
 
 ### 使用示例：
