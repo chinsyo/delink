@@ -77,11 +77,10 @@ def _trimming(s, t):
 if __name__ == '__main__':
     args = sys.argv[1:]
     for arg in args:
-        # code = guesscode(arg)
-        a, b, c, d = transcode(arg)
+        raw, thd, flg, qqd = transcode(arg)
 
-        print("原始: {}".format(a))
-        print("迅雷: {}".format(b))
-        print("快车: {}".format(c))
-        print("旋风: {}".format(d))
+        print("原始: {}".format(raw))
+        print("迅雷: {}".format(thd))
+        print("快车: {}".format(flg))
+        print("旋风: {}".format(qqd))
         print("")
