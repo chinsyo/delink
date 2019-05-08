@@ -41,11 +41,11 @@ def decode(s, t):
     return decoded
 
 def guesscode(s):
-    if s.startswith('thunder://'):
+    if s.lower().startswith('thunder://'):
         return EncodeType.THUNDER
-    if s.startswith('flashget://'):
+    if s.lower().startswith('flashget://'):
         return EncodeType.FLASHGET
-    if s.startswith('qqdl://'):
+    if s.lower().startswith('qqdl://'):
         return EncodeType.QQDOWNLOAD
     return EncodeType.RAW
 
