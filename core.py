@@ -54,9 +54,9 @@ def _subscript(s):
 
 def _utf8function(fn, s):
     assert type(s) is str
-    b = s.encode('utf-8')
+    b = s.encode('utf-8', 'ignore')
     b = fn(b)
-    return b.decode('utf-8')
+    return b.decode('utf-8', 'ignore')
 
 def _padding(s, t):
     dest = s
