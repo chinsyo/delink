@@ -1,21 +1,21 @@
 #!/usr/bin/python3
 
 import tkinter as tk
-from tkinter import X, YES, END, TOP, LEFT, RIGHT
+from tkinter import X, YES, END, TOP, LEFT, RIGHT, BOTTOM, SW
 
 from core import transcode
 
 class App(tk.Frame):
-    fields = '真实地址', '迅雷下载', '网际快车', 'QQ旋风'
+    fields = '原始链接', '迅雷链接', '快车链接', '旋风链接'
 
     def __init__(self, master):
-        tk.Frame.__init__(self, master, height=60, width=80)
+        tk.Frame.__init__(self, master)
         self.master.bind('<Return>', (lambda _, e=None: self.query()))
         self.entries = self.makeform(App.fields)
         self.querybutton = tk.Button(self.master, text='转换', command=self.query)
-        self.querybutton.pack(side=LEFT, padx=5, pady=5)
+        self.querybutton.pack(side=LEFT, anchor=SW, padx=5, pady=5)
         self.clearbutton = tk.Button(self.master, text='清空', command=self.clear)
-        self.clearbutton.pack(side=LEFT, padx=5, pady=5)
+        self.clearbutton.pack(after=self.querybutton, anchor=SW, side=LEFT, padx=5, pady=5)
 
     def query(self):
         def set_text(field, text):
@@ -47,7 +47,8 @@ class App(tk.Frame):
 
 def main():
     root = tk.Tk()
-    root.minsize(500, 200)
+    root.minsize(400, 250)
+    root.maxsize(960, 600)
     root.title('Delink')
     App(root).pack(expand=True, fill='both')
     root.mainloop()
